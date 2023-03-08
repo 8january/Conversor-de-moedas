@@ -3,6 +3,8 @@ package zero.conversor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,7 +23,7 @@ public class Conversor extends JFrame {
 
 	private JTextField resultado = new JTextField();
 
-	private String moedas = "USD, BRL, EUR, JPY, GBP, CAD, AUD, CHF, CNY, HKD, NZD, SEK, KRW, SGD, NOK, MXN, INR, RUB, ZAR, TRY, IDR, TWD, SAR, AED, PLN, THB, DKK, MYR, HUF, CZK.";
+	private String moedas = "USD,BRL,EUR,JPY,GBP,CAD,AUD,CHF,CNY,HKD,NZD,SEK,KRW,SGD,NOK,MXN,INR,RUB,ZAR,TRY,IDR,TWD,SAR,AED,PLN,THB,DKK,MYR,HUF,CZK.";
 	private String[] listaDeMoedas = moedas.split(",");
 
 	private JButton converter = new JButton("Converter");
@@ -31,6 +33,8 @@ public class Conversor extends JFrame {
 
 	Color corDeFundo = new Color(215, 180, 20);
 	Color corSecundaria = new Color(250, 220, 155);
+
+	private Resposta resposta = new Resposta();
 
 	public Conversor() {
 		this.setSize(halfDimension);
@@ -88,7 +92,26 @@ public class Conversor extends JFrame {
 		converter.setSize(150, 45);
 		converter.setLocation(halfDimension.width / 2 - 75, 100);
 
+		Calcular calculo = new Calcular();
+		converter.addActionListener(calculo);
+
 		this.painelSecundario.add(converter);
+
+	}
+
+	private class Calcular implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String origem = moedaOrigem.getSelectedItem().toString();
+			String destino = moedaDestino.getSelectedItem().toString();
+
+			String aCalcular = resultado.getText();
+
+			String resultadoFinal = resposta.converte(origem, destino, aCalcular);
+
+			resultado.setText(resultadoFinal);
+		}
 
 	}
 
