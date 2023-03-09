@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -16,17 +18,14 @@ public class Resposta {
 	private String url = "https://economia.awesomeapi.com.br/last/";
 	private String moedaOrigem = "";
 	private String moedaDestino = "";
-	private String valor = "";
 
 	public String converte(String moedaOrigem, String moedaDestino, String valor) {
 
 		String resultado = null;
 		this.moedaOrigem = moedaOrigem;
 		this.moedaDestino = moedaDestino;
-		this.valor = valor;
-
 		String completeUrl = url + moedaOrigem + "-" + moedaDestino;
-		resultado = Double.toString(Double.parseDouble(valor) * resultadoHttp(completeUrl));
+		resultado = Double.toString(Double.parseDouble(valor.replace(",", ".")) * resultadoHttp(completeUrl));
 
 		return resultado;
 	}
@@ -45,14 +44,13 @@ public class Resposta {
 			String inputLine;
 			StringBuilder content = new StringBuilder();
 			while ((inputLine = in.readLine()) != null) {
-			    content.append(inputLine);
+				content.append(inputLine);
 			}
 			in.close();
 
 			JsonObject jsonObject = new Gson().fromJson(content.toString(), JsonObject.class);
-			JsonElement value = jsonObject.get(moedaOrigem+moedaDestino);
+			JsonElement value = jsonObject.get(moedaOrigem + moedaDestino);
 
-			System.out.println(value.getAsJsonObject().get("high").getAsDouble());
 			valorConvertido = value.getAsJsonObject().get("high").getAsDouble();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -63,6 +61,5 @@ public class Resposta {
 		return valorConvertido;
 
 	}
-
 
 }
